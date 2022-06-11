@@ -1,14 +1,14 @@
 import express from 'express'
 import cookieParser from 'cookie-parser'
 
-import { connect_mongo_db, } from './database/database.js'
+import { connect_mongo_db, } from './database/database'
 import {
     mongo_error_handler_middleware,
     moongose_error_handler_middleware,
-} from './database/errors_handler.js'
-import { auth_router, } from './routers/auth.js'
-import { HTTP_RESPS, ABSHTTPResp, } from './http_resps.js'
-import { CONFIG, } from './config.js'
+} from './database/errors_handler'
+import { auth_router, } from './routers/auth'
+import { HTTP_RESPS, } from './http_resps'
+import { CONFIG, } from './config'
 
 const app = express()
 
@@ -22,40 +22,26 @@ app.use(async (req, res, next) => {
 })
 
 // routes
-app.get('/', (req, res) => res.send('Hello World!'))
+app.get('/', async (req, res) => {
+    await new HTTP_RESPS.NotImplimented().send(res)
+})
 app.use('/auth/', auth_router)
 
 // error handlers
-app.use(async (err, req, res, next) => {
-    console.log('123', err)
-    next(err)
-})
-
 app.use(mongo_error_handler_middleware)
 app.use(moongose_error_handler_middleware)
 
-// http_resps.js
-app.use(async (err, req, res, next) => {
-    if (err instanceof ABSHTTPResp) {
-        res.status(err.statusCode)
-        console.log('GENERAL HTTP HANDLER', err)
-        return await res.send(err)
-    }
-})
-
 // general error handler
-app.use(async (err, req, res, next) => {
+app.use(async (err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
     console.log('!!!UNHANDLED EXCEPTION!!!', 'Path: ', err.name, req.path, '::', JSON.parse(JSON.stringify(err)))
-    const general_error = new HTTP_RESPS.InternalServerError()
-    res.status(general_error.statusCode)
-    await res.send(general_error)
+    await new HTTP_RESPS.InternalServerError().send(res)
 })
 
 export const App = {
     start: async () => {
         await connect_mongo_db()
         app.listen(
-            CONFIG.EXPRESS_PORT,
+            Number(CONFIG.EXPRESS_PORT),
             CONFIG.EXPRESS_HOST,
             () => { console.log(`express started on ${CONFIG.EXPRESS_HOST}:${CONFIG.EXPRESS_PORT}`) },
         )

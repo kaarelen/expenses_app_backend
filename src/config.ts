@@ -1,29 +1,21 @@
 import 'dotenv/config'
 
-interface conf {
-    DB_SALT: string | null;
-    MONGO_HOST: string;
-    MONGO_DB_NAME: string;
-    EXPRESS_HOST: string;
-    EXPRESS_PORT: string | number;
-}
-const CONFIG: conf = {
-    DB_SALT: null,
-    MONGO_HOST: 'localhost:27017',
-    MONGO_DB_NAME: 'notes_app',
-    EXPRESS_HOST: 'localhost',
-    EXPRESS_PORT: 3000,
+function get_env_variable(key: string, default_value: string, required_in_env: boolean = false): string {
+    if (key in process.env) {
+        return String(process.env[key])
+    } else if (required_in_env) {
+        throw Error(`${key} must be in env or .env`)
+    } else {
+        return default_value
+    }
 }
 
-const required_env_variables = ['DB_SALT']
-
-required_env_variables.forEach(
-    key => {
-        let env_vairable = process.env[key]
-        if (env_vairable == null) {
-            throw new Error(`Error occured on getting ${key} .env variable.`)
-        }
-        CONFIG[key as keyof conf] = env_vairable
-    })
+const CONFIG = {
+    DB_SALT: get_env_variable('DB_SALT', '', true),
+    MONGO_HOST: get_env_variable('MONGO_HOST', 'localhost:27017'),
+    MONGO_DB_NAME: get_env_variable('MONGO_DB_NAME', 'notes_app'),
+    EXPRESS_HOST: get_env_variable('EXPRESS_HOST', 'localhost'),
+    EXPRESS_PORT: get_env_variable('EXPRESS_PORT', '3000'),
+}
 
 export { CONFIG }

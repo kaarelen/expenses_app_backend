@@ -1,9 +1,9 @@
 import mongoose from 'mongoose'
 import bcrypt from 'bcrypt'
 
-import { CONFIG } from '../../config.js'
+import { CONFIG } from '../../config'
 
-const NoteSchema = mongoose.Schema({
+const NoteSchema = new mongoose.Schema({
     title: {
         type: String,
         required: true
@@ -24,7 +24,7 @@ const NoteSchema = mongoose.Schema({
 })
 const NoteModel = mongoose.model('note', NoteSchema)
 
-function validate_password_hash(password) {
+function validate_password_hash(password: string) {
     return password !== undefined && password.length > 10
 }
 
@@ -39,7 +39,7 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true,
         minlength: 10,
-        set: (password) => bcrypt.hashSync(password, CONFIG.DB_SALT),
+        set: (password: string) => bcrypt.hashSync(password, CONFIG.DB_SALT),
         validate: {
             validator: validate_password_hash,
             message: 'invalid password',

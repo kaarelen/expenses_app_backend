@@ -1,16 +1,30 @@
+import express from 'express'
+
+interface ABSHTTPRespConstructor {
+    message?: string,
+    additional_info?: object,
+}
+
 class ABSHTTPResp extends Error {
-    constructor(message, additional_info) {
+    statusCode = 0
+    additional_info: object = {}
+
+    constructor(args: ABSHTTPRespConstructor = {}) {
         super()
         this.name = this.constructor.name
-        if (message) {
-            this.message = message
+        if (args.message) {
+            this.message = args.message
         }
-        // this.message = message ? message : this.constructor.default_message
-        this.additional_info = additional_info ? additional_info : this.constructor.additional_info
+        if (args.additional_info) {
+            this.additional_info = args.additional_info
+        }
     }
-    statusCode = 0
-    additional_info = {}
+    async send(res: express.Response) {
+        res.status(this.statusCode)
+        await res.send(this)
+    }
 }
+
 class Ok extends ABSHTTPResp {
     statusCode = 200
 }
@@ -24,9 +38,7 @@ class Accepted extends ABSHTTPResp {
 class BadRequest extends ABSHTTPResp {
     statusCode = 400
 }
-class ValidationError extends BadRequest {
-}
-
+class ValidationError extends BadRequest { }
 class Conflict extends ABSHTTPResp {
     statusCode = 409
 }
@@ -40,6 +52,7 @@ class NotImplimented extends ABSHTTPResp {
 
 
 const HTTP_RESPS = {
+    ABSHTTPResp: ABSHTTPResp,
     Ok: Ok,
     Created: Created,
     Accepted: Accepted,
@@ -53,5 +66,4 @@ const HTTP_RESPS = {
 
 export {
     HTTP_RESPS,
-    ABSHTTPResp,
 }
