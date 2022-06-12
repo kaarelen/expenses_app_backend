@@ -9,20 +9,18 @@ auth_router
     .post('/sign_up', async (req, res, next) => {
         const [email, password] = [req.body.email, req.body.password]
         if (req.body?.password?.length < 5) {
-            new HTTP_RESPS.ValidationError({ additional_info: { 'fields': ['password'] } }).send(res)
+            console.warn('warning!!!!', req.path)
+            return new HTTP_RESPS.ValidationError(
+                { additional_info: { 'fields': ['password'] } } // sick!! sensetive information
+            ).send(res)
         }
-        try {
-            const user = await new UserModel({
-                email: email,
-                password_hash: password
-            })
-            await user.validate()
-            const m_doc = await UserModel.create(user)
-            return new HTTP_RESPS.Created().send(res)
-        }
-        catch (err) {
-            return next(err)
-        }
+        const user = await new UserModel({
+            email: email,
+            password_hash: password
+        })
+        await user.validate()
+        const m_doc = await UserModel.create(user)
+        return new HTTP_RESPS.Created().send(res)
     })
     .post('/login', async (req, res, next) => {
         return new HTTP_RESPS.NotImplimented().send(res)

@@ -8,6 +8,7 @@ interface ABSHTTPRespConstructor {
 class ABSHTTPResp extends Error {
     statusCode = 0
     additional_info: object = {}
+    success: boolean = false
 
     constructor(args: ABSHTTPRespConstructor = {}) {
         super()
@@ -19,26 +20,35 @@ class ABSHTTPResp extends Error {
             this.additional_info = args.additional_info
         }
     }
-    async send(res: express.Response) {
+    send(res: express.Response) {
         res.status(this.statusCode)
-        await res.send(this)
+        res.send(this)
     }
 }
 
 class Ok extends ABSHTTPResp {
     statusCode = 200
+    success = true
 }
 class Created extends ABSHTTPResp {
     statusCode = 201
+    success = true
 }
 class Accepted extends ABSHTTPResp {
     statusCode = 202
+    success = true
 }
 
 class BadRequest extends ABSHTTPResp {
     statusCode = 400
 }
 class ValidationError extends BadRequest { }
+
+class NotFound extends ABSHTTPResp {
+    statusCode = 404
+    message = 'API endpoint does not exists'
+}
+
 class Conflict extends ABSHTTPResp {
     statusCode = 409
 }
@@ -57,6 +67,7 @@ const HTTP_RESPS = {
     Created: Created,
     Accepted: Accepted,
     BadRequest: BadRequest,
+    NotFound: NotFound,
     Conflict: Conflict,
     InternalServerError: InternalServerError,
     NotImplimented: NotImplimented,

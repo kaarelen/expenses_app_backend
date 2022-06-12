@@ -1,11 +1,9 @@
 import express from 'express'
 import cookieParser from 'cookie-parser'
+import 'express-async-errors'
 
 import { connect_mongo_db, } from './database/database'
-import {
-    mongo_error_handler_middleware,
-    moongose_error_handler_middleware,
-} from './database/errors_handler'
+import { mongo_errors_middleware, } from './database/error_handler'
 import { auth_router, } from './routers/auth'
 import { HTTP_RESPS, } from './http_resps'
 import { CONFIG, } from './config'
@@ -16,28 +14,27 @@ const app = express()
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser())
-app.use(async (req, res, next) => {
+app.use((req, res, next) => {
     console.log('REQUEST::', req.method, req.url, 'q::', req.query, 'b::', req.body)
-    await next()
+    next()
 })
 
 // routes
-app.get('/', async (req, res) => {
-    await new HTTP_RESPS.NotImplimented().send(res)
-})
 app.use('/auth/', auth_router)
+app.use('/', async (req, res) => {
+    new HTTP_RESPS.NotFound().send(res)
+})
 
 // error handlers
-app.use(mongo_error_handler_middleware)
-app.use(moongose_error_handler_middleware)
-
+app.use(mongo_errors_middleware)
 // general error handler
-app.use(async (err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
+app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
     console.log('!!!UNHANDLED EXCEPTION!!!', 'Path: ', err.name, req.path, '::', JSON.parse(JSON.stringify(err)))
-    await new HTTP_RESPS.InternalServerError().send(res)
+    // TODO: add notifying mechanism for unhandled exceptions
+    new HTTP_RESPS.InternalServerError().send(res)
 })
 
-export const App = {
+const App = {
     start: async () => {
         await connect_mongo_db()
         app.listen(
@@ -47,3 +44,5 @@ export const App = {
         )
     },
 }
+
+export { App }
