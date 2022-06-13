@@ -1,6 +1,8 @@
 import express from 'express'
 import cookieParser from 'cookie-parser'
 import 'express-async-errors'
+import compression from 'compression'
+import helmet from 'helmet'
 
 import { connect_mongo_db, } from './database/database'
 import { mongo_errors_middleware, } from './database/error_handler'
@@ -11,6 +13,8 @@ import { CONFIG, } from './config'
 const app = express()
 
 // miidlewares
+app.use(helmet())
+app.use(compression())
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser())

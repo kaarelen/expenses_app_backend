@@ -13,7 +13,7 @@ interface ExpressErrorMiddleware {
 
 function mongo_error_handler_middleware(err: MongoServerError, req: express.Request, res: express.Response, next: express.NextFunction) {
     if (err?.code == 11000) { // already exists
-        return new HTTP_RESPS.Conflict({ additional_info: err.keyPattern }).send(res)
+        return new HTTP_RESPS.Conflict({ additional_info: err.keyPattern, }).send(res)
     } else if (err?.code === 121) {
         return new HTTP_RESPS.ValidationError({ message: err.message }).send(res)
     }
