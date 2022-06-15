@@ -3,10 +3,12 @@ import cookieParser from 'cookie-parser'
 import 'express-async-errors'
 import compression from 'compression'
 import helmet from 'helmet'
+import jwt from 'jsonwebtoken';
 
 import { connect_mongo_db, } from './database/database'
 import { mongo_errors_middleware, } from './database/error_handler'
 import { auth_router, } from './routers/auth'
+import { expenses_router, } from './routers/expenses'
 import { HTTP_RESPS, } from './http_resps'
 import { CONFIG, } from './config'
 
@@ -23,8 +25,33 @@ app.use((req, res, next) => {
     next()
 })
 
-// routes
+// auth
 app.use('/auth/', auth_router)
+app.use(async (req, res, next) => {
+    const authHeader = req.headers.authorization
+    if (!authHeader) { return new HTTP_RESPS.BadRequest().send(res) }
+    const token = authHeader.replace('Bearer ', '')
+    jwt.verify(
+        token,
+        CONFIG.JWT_SECRET_TOKEN,
+        (err, decoded) => {
+            if (err) {
+                if (err instanceof jwt.TokenExpiredError) {
+                    return new HTTP_RESPS.Unauthorized().send(res)
+                } else {
+                    throw err
+                }
+            } else {
+                // @ts-ignore. fuck jws types lib.
+                if (decoded?.jti === undefined) { return new HTTP_RESPS.Unauthorized().send(res) }
+                // @ts-ignore. fuck jws types lib.
+                res.locals.user = decoded.jti
+                next()
+            }
+        })
+})
+// routes
+app.use('/expenses/', expenses_router)
 app.use('/', async (req, res) => {
     new HTTP_RESPS.NotFound().send(res)
 })
@@ -33,7 +60,7 @@ app.use('/', async (req, res) => {
 app.use(mongo_errors_middleware)
 // general error handler
 app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
-    console.log('!!!UNHANDLED EXCEPTION!!!', 'Path: ', err.name, req.path, '::', JSON.parse(JSON.stringify(err)))
+    console.log('!!!UNHANDLED EXCEPTION!!!', 'Path: ', req.path, req.body, '::', err.name, err,)
     // TODO: add notifying mechanism for unhandled exceptions
     new HTTP_RESPS.InternalServerError().send(res)
 })

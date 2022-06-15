@@ -44,6 +44,12 @@ class BadRequest extends ABSHTTPResp {
 }
 class ValidationError extends BadRequest { }
 
+class Unauthorized extends ABSHTTPResp {
+    statusCode = 401
+}
+class Forbidden extends ABSHTTPResp {
+    statusCode = 403
+}
 class NotFound extends ABSHTTPResp {
     statusCode = 404
     message = 'API endpoint does not exists'
@@ -67,6 +73,8 @@ const HTTP_RESPS = {
     Created: Created,
     Accepted: Accepted,
     BadRequest: BadRequest,
+    Unauthorized: Unauthorized,
+    Forbidden: Forbidden,
     NotFound: NotFound,
     Conflict: Conflict,
     InternalServerError: InternalServerError,
