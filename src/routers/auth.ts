@@ -19,7 +19,10 @@ auth_router
         }
         const user = await new UserModel({
             email: email,
-            password_hash: password
+            password_hash: password,
+            wallets: [],
+            transaction_categories: [],
+            transactions: [],
         })
         await user.validate()
         await UserModel.create(user)

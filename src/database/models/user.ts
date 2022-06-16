@@ -1,7 +1,10 @@
 import mongoose from 'mongoose'
 import bcrypt from 'bcrypt'
 
-import { CONFIG } from '../../config'
+import { CONFIG, } from '../../config'
+import { WalletSchema, } from './wallet'
+import { TransactionSchema } from './transaction'
+import { TransactionCategorieSchema } from './transaction_type'
 
 function validate_password_hash(password: string) {
     return password !== undefined && password.length == 60
@@ -12,13 +15,13 @@ function hash_user_passord(password: string) {
 
 const UserSchema = new mongoose.Schema({
     email: {
-        type: String,
+        type: mongoose.Schema.Types.String,
         required: true,
         unique: true,
         minlength: 5,
     },
     password_hash: {
-        type: String,
+        type: mongoose.Schema.Types.String,
         required: true,
         minlength: 10,
         set: hash_user_passord,
@@ -27,6 +30,18 @@ const UserSchema = new mongoose.Schema({
             message: 'invalid password',
         },
     },
+    wallets: {
+        type: [WalletSchema],
+        required: true,
+    },
+    transaction_categories: {
+        type: [TransactionCategorieSchema],
+        required: true,
+    },
+    transactions: {
+        type: [TransactionSchema],
+        required: true,
+    }
 })
 
 const UserModel = mongoose.model('user', UserSchema)

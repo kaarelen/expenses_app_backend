@@ -1,16 +1,17 @@
 import express from 'express'
 import cookieParser from 'cookie-parser'
-import 'express-async-errors'
 import compression from 'compression'
 import helmet from 'helmet'
 import jwt from 'jsonwebtoken';
+import 'express-async-errors'
 
+import { CONFIG, } from './config'
+import { HTTP_RESPS, } from './http_resps'
 import { connect_mongo_db, } from './database/database'
 import { mongo_errors_middleware, } from './database/error_handler'
 import { auth_router, } from './routers/auth'
 import { expenses_router, } from './routers/expenses'
-import { HTTP_RESPS, } from './http_resps'
-import { CONFIG, } from './config'
+import { wallet_router } from './routers/wallet'
 
 const app = express()
 
@@ -37,7 +38,9 @@ app.use(async (req, res, next) => {
         (err, decoded) => {
             if (err) {
                 if (err instanceof jwt.TokenExpiredError) {
-                    return new HTTP_RESPS.Unauthorized().send(res)
+                    return new HTTP_RESPS.Unauthorized({ message: 'token expired' }).send(res)
+                } else if (err instanceof jwt.JsonWebTokenError) {
+                    return new HTTP_RESPS.Unauthorized({ message: 'bad token' }).send(res)
                 } else {
                     throw err
                 }
@@ -52,6 +55,7 @@ app.use(async (req, res, next) => {
 })
 // routes
 app.use('/expenses/', expenses_router)
+app.use('/wallet/', wallet_router)
 app.use('/', async (req, res) => {
     new HTTP_RESPS.NotFound().send(res)
 })
@@ -60,7 +64,7 @@ app.use('/', async (req, res) => {
 app.use(mongo_errors_middleware)
 // general error handler
 app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
-    console.log('!!!UNHANDLED EXCEPTION!!!', 'Path: ', req.path, req.body, '::', err.name, err,)
+    console.log('!!!UNHANDLED EXCEPTION!!!', 'Path: ', req.path, req.headers, req.body, '::', err.name, err,)
     // TODO: add notifying mechanism for unhandled exceptions
     new HTTP_RESPS.InternalServerError().send(res)
 })
