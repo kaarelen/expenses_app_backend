@@ -11,7 +11,7 @@ wallet_router
     .get('/get_all', async (req, res, next) => {
         const user = await UserModel.findOne({ _id: res.locals.user })
         return new HTTP_RESPS.Ok({
-            additional_info: {
+            payload: {
                 wallets: user.wallets
             }
         }).send(res)

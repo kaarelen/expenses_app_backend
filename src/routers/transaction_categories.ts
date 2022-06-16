@@ -11,7 +11,7 @@ transaction_categories_router
     .get('/get_all', async (req, res, next) => {
         const user = await UserModel.findOne({ _id: res.locals.user })
         return new HTTP_RESPS.Ok({
-            additional_info: {
+            payload: {
                 transaction_categories: user.transaction_categories
             }
         }).send(res)

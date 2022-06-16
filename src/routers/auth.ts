@@ -14,7 +14,7 @@ auth_router
 
         if (req.body?.password?.length < 5) {
             return new HTTP_RESPS.ValidationError(
-                { additional_info: { 'fields': ['password'] } }
+                { payload: { 'fields': ['password'] } }
             ).send(res)
         }
         const user = new UserModel({
@@ -40,7 +40,7 @@ auth_router
                     CONFIG.JWT_SECRET_TOKEN,
                     { expiresIn: '24h', jwtid: user._id.toString() },
                 );
-                return new HTTP_RESPS.Ok({ additional_info: { accessToken: accessToken } }).send(res)
+                return new HTTP_RESPS.Ok({ payload: { accessToken: accessToken } }).send(res)
             }
         }
         return new HTTP_RESPS.BadRequest().send(res)

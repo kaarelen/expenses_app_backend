@@ -11,7 +11,7 @@ const expenses_router = express.Router()
 
 expenses_router
     .get('/get_name', async (req, res, next) => {
-        return new HTTP_RESPS.Ok({ additional_info: { data: '123' } }).send(res)
+        return new HTTP_RESPS.Ok({ payload: { data: '123' } }).send(res)
     })
 export {
     expenses_router,

@@ -2,12 +2,12 @@ import express from 'express'
 
 interface ABSHTTPRespConstructor {
     message?: string,
-    additional_info?: object,
+    payload?: object,
 }
 
 class ABSHTTPResp extends Error {
     statusCode = 0
-    additional_info: object = {}
+    payload: object = {}
     success: boolean = false
 
     constructor(args: ABSHTTPRespConstructor = {}) {
@@ -16,8 +16,8 @@ class ABSHTTPResp extends Error {
         if (args.message) {
             this.message = args.message
         }
-        if (args.additional_info) {
-            this.additional_info = args.additional_info
+        if (args.payload) {
+            this.payload = args.payload
         }
     }
     send(res: express.Response) {
