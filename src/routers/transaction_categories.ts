@@ -18,19 +18,17 @@ transaction_categories_router
     })
     .post('/create', async (req, res, next) => {
         const name = req.body.name
-        const wallet_type = req.body.wallet_type
-        const currency = req.body.currency
-        const balance = req.body.balance
+        const type = req.body.type
 
-        const wallet = new TransactionCategorieModel({
+        const transaction_categorie = new TransactionCategorieModel({
             name: name,
-            type: '',
-            archived: '',
+            type: type,
+            archived: false,
         })
 
-        await wallet.validate()
+        await transaction_categorie.validate()
         const user = await UserModel.findOne({ _id: res.locals.user })
-        user.wallets.push(wallet)
+        user.transaction_categories.push(transaction_categorie)
         await user.save()
         return new HTTP_RESPS.Created().send(res)
     })
