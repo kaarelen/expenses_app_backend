@@ -2,33 +2,30 @@ import express from 'express';
 
 import { HTTP_RESPS } from '../http_resps';
 import { CONFIG } from '../config';
-import { WalletModel } from '../database/models/wallet';
 import { UserModel } from '../database/models/user';
+import { TransactionCategorieModel } from '../database/models/transaction_categorie';
 
-const wallet_router = express.Router()
+const transaction_categories_router = express.Router()
 
-wallet_router
+transaction_categories_router
     .get('/get_all', async (req, res, next) => {
         const user = await UserModel.findOne({ _id: res.locals.user })
         return new HTTP_RESPS.Ok({
             additional_info: {
-                wallets: user.wallets
+                transaction_categories: user.transaction_categories
             }
         }).send(res)
     })
     .post('/create', async (req, res, next) => {
-        // sick! TODO: write requset body validation (not only here)
         const name = req.body.name
         const wallet_type = req.body.wallet_type
         const currency = req.body.currency
         const balance = req.body.balance
 
-        const wallet = new WalletModel({
+        const wallet = new TransactionCategorieModel({
             name: name,
-            wallet_type: wallet_type,
-            currency: currency,
-            balance: balance,
-            archived: false,
+            type: '',
+            archived: '',
         })
 
         wallet.validate()
@@ -44,4 +41,4 @@ wallet_router
         return new HTTP_RESPS.NotImplimented().send(res)
     })
 
-export { wallet_router }
+export { transaction_categories_router }

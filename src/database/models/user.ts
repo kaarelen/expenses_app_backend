@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt'
 import { CONFIG, } from '../../config'
 import { WalletSchema, } from './wallet'
 import { TransactionSchema } from './transaction'
-import { TransactionCategorieSchema } from './transaction_type'
+import { TransactionCategorieSchema } from './transaction_categorie'
 
 function validate_password_hash(password: string) {
     return password !== undefined && password.length == 60

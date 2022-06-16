@@ -17,14 +17,14 @@ auth_router
                 { additional_info: { 'fields': ['password'] } }
             ).send(res)
         }
-        const user = await new UserModel({
+        const user = new UserModel({
             email: email,
             password_hash: password,
             wallets: [],
             transaction_categories: [],
             transactions: [],
         })
-        await user.validate()
+        user.validate()
         await UserModel.create(user)
         return new HTTP_RESPS.Created().send(res)
     })

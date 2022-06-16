@@ -11,7 +11,8 @@ const TransactionCategorieSchema = new mongoose.Schema({
         required: true,
         'enum': [
             'expence',
-            'income'
+            'income',
+            'hybrid'
         ]
     },
     archived: {

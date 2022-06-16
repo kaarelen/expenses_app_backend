@@ -12,6 +12,7 @@ import { mongo_errors_middleware, } from './database/error_handler'
 import { auth_router, } from './routers/auth'
 import { expenses_router, } from './routers/expenses'
 import { wallet_router } from './routers/wallet'
+import { transaction_categories_router } from './routers/transaction_categories';
 
 const app = express()
 
@@ -54,8 +55,9 @@ app.use(async (req, res, next) => {
         })
 })
 // routes
-app.use('/expenses/', expenses_router)
 app.use('/wallet/', wallet_router)
+app.use('/transaction_categories/', transaction_categories_router)
+app.use('/expenses/', expenses_router)
 app.use('/', async (req, res) => {
     new HTTP_RESPS.NotFound().send(res)
 })

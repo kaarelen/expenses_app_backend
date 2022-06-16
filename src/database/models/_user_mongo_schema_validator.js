@@ -75,6 +75,7 @@ let user_validator =
                             enum: [
                                 'expence',
                                 'income',
+                                'hybrid',
                             ]
                         },
                     }
