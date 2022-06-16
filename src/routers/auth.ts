@@ -24,7 +24,7 @@ auth_router
             transaction_categories: [],
             transactions: [],
         })
-        user.validate()
+        await user.validate()
         await UserModel.create(user)
         return new HTTP_RESPS.Created().send(res)
     })

@@ -31,7 +31,7 @@ wallet_router
             archived: false,
         })
 
-        wallet.validate()
+        await wallet.validate()
         const user = await UserModel.findOne({ _id: res.locals.user })
         user.wallets.push(wallet)
         await user.save()
