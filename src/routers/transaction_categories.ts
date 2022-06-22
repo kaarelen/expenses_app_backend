@@ -1,35 +1,25 @@
-import express from 'express';
+import express from 'express'
 
-import { HTTP_RESPS } from '../http_resps';
-import { CONFIG } from '../config';
-import { UserModel } from '../database/models/user';
-import { TransactionCategorieModel } from '../database/models/transaction_categorie';
+import { HTTP_RESPS } from '../http_resps'
+import { transactionCategoriesModel } from '../db_pg/models/transactionCategories'
 
 const transaction_categories_router = express.Router()
-
 transaction_categories_router
     .get('/get_all', async (req, res, next) => {
-        const user = await UserModel.findOne({ _id: res.locals.user })
+        const categories = await transactionCategoriesModel.findAll({
+            where: { fk_users: res.locals.user }
+        })
         return new HTTP_RESPS.Ok({
-            payload: {
-                transaction_categories: user.transaction_categories
-            }
+            payload: categories
         }).send(res)
     })
     .post('/create', async (req, res, next) => {
-        const name = req.body.name
-        const type = req.body.type
-
-        const transaction_categorie = new TransactionCategorieModel({
-            name: name,
-            type: type,
+        await transactionCategoriesModel.create({
+            name: req.body.name,
+            categorie_type: req.body.categorie_type,
             archived: false,
+            fk_users: res.locals.user,
         })
-
-        await transaction_categorie.validate()
-        const user = await UserModel.findOne({ _id: res.locals.user })
-        user.transaction_categories.push(transaction_categorie)
-        await user.save()
         return new HTTP_RESPS.Created().send(res)
     })
     .post('/update', async (req, res, next) => {

@@ -9,15 +9,19 @@ function get_env_variable(key: string, default_value: string, required_in_env: b
         return default_value
     }
 }
-
 const CONFIG = {
-    NODE_ENV: get_env_variable('NODE_ENV', 'production', true),
+    // SECRET
     DB_SALT: get_env_variable('DB_SALT', '', true),
     JWT_SECRET_TOKEN: get_env_variable('JWT_SECRET_TOKEN', '', true),
-    MONGO_HOST: get_env_variable('MONGO_HOST', 'localhost:27017'),
-    MONGO_DB_NAME: get_env_variable('MONGO_DB_NAME', 'notes_app'),
+    // PG
+    PG_USER: get_env_variable('PG_USER', ''),
+    PG_HOST: get_env_variable('PG_HOST', ''),
+    PG_DATABASE: get_env_variable('PG_DATABASE', ''),
+    PG_PASSWORD: get_env_variable('PG_PASSWORD', ''),
+    PG_PORT: get_env_variable('PG_PORT', '5432'),
+    // else
+    NODE_ENV: get_env_variable('NODE_ENV', 'production', true),
     EXPRESS_HOST: get_env_variable('EXPRESS_HOST', 'localhost'),
-    EXPRESS_PORT: get_env_variable('EXPRESS_PORT', '3000'),
+    EXPRESS_PORT: get_env_variable('EXPRESS_PORT', '4000'),
 }
-
 export { CONFIG }
