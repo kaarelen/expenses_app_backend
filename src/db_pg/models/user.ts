@@ -1,4 +1,4 @@
-import { DataTypes, Optional, Model } from 'sequelize'
+import { DataTypes, Model } from 'sequelize'
 import { pg_client } from '../db'
 
 interface UserInstance extends Model {
@@ -8,7 +8,6 @@ interface UserInstance extends Model {
     createdAt?: Date
     updatedAt?: Date
 }
-
 const usersModel = pg_client.define<UserInstance>(
     'users',
     {
@@ -38,5 +37,4 @@ const usersModel = pg_client.define<UserInstance>(
         },
     }
 )
-
 export { usersModel }

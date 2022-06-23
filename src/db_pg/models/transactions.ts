@@ -1,4 +1,4 @@
-import { DataTypes, Model, Optional } from 'sequelize'
+import { DataTypes, Model } from 'sequelize'
 import { pg_client } from '../db'
 import { transactionCategoriesModel } from './transactionCategories'
 import { usersModel } from './user'
@@ -14,7 +14,6 @@ interface TransactionsInstance extends Model {
     createdAt?: Date
     updatedAt?: Date
 }
-
 const transactionsModel = pg_client.define<TransactionsInstance>(
     'transactions',
     {

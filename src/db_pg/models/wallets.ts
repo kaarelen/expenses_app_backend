@@ -1,4 +1,4 @@
-import { DataTypes, Deferrable, Model, Optional } from 'sequelize'
+import { DataTypes, Model } from 'sequelize'
 import { pg_client } from '../db'
 import { usersModel } from './user'
 

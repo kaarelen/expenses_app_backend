@@ -1,4 +1,4 @@
-import { Model, Optional, Sequelize } from 'sequelize'
+import { Sequelize } from 'sequelize'
 import { CONFIG } from '../config'
 
 const pg_client = new Sequelize(
