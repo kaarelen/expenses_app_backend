@@ -1,5 +1,5 @@
 {
-  "main": "main.js",
+  "main": "./src/main.ts",
   "dependencies": {
     "bcrypt": "^5.0.1",
     "compression": "^1.7.4",
@@ -33,5 +33,10 @@
   },
   "scripts": {
     "start": "nodemon ./src/main.ts"
-  }
+  },
+  "name": "expenses_app_backend",
+  "version": "1.0.0",
+  "repository": "git@github.com:Kaarelen/expenses_app_backend.git",
+  "author": "Timur Kravchenko <kaarelen@gmail.com>",
+  "license": "MIT"
 }
