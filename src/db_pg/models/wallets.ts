@@ -13,6 +13,8 @@ interface WalletInstance extends Model {
     createdAt?: Date
     updatedAt?: Date
 }
+const wallet_type_enum = ['cash', 'card']
+const currency_enum = ['USD', 'EUR', 'UAH']
 const walletsModel = pg_client.define<WalletInstance>(
     'wallets',
     {
@@ -28,11 +30,13 @@ const walletsModel = pg_client.define<WalletInstance>(
             allowNull: false,
         },
         wallet_type: {
-            type: DataTypes.ENUM('cash', 'card'),
+            type: DataTypes.ENUM,
+            values: wallet_type_enum,
             allowNull: false,
         },
         currency: {
-            type: DataTypes.ENUM('USD', 'EUR', 'UAH'),
+            type: DataTypes.ENUM,
+            values: currency_enum,
             allowNull: false,
         },
         balance: {
@@ -55,4 +59,8 @@ const walletsModel = pg_client.define<WalletInstance>(
         },
     }
 )
-export { walletsModel }
+export {
+    walletsModel,
+    wallet_type_enum,
+    currency_enum,
+}

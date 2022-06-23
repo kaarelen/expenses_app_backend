@@ -11,6 +11,7 @@ interface TransactionCategoriesInstance extends Model {
     createdAt?: Date
     updatedAt?: Date
 }
+const categorie_type_enum = ['expence', 'income']
 const transactionCategoriesModel = pg_client.define<TransactionCategoriesInstance>(
     'transactionCategories',
     {
@@ -26,7 +27,8 @@ const transactionCategoriesModel = pg_client.define<TransactionCategoriesInstanc
             allowNull: false,
         },
         categorie_type: {
-            type: DataTypes.ENUM('expence', 'income'),
+            type: DataTypes.ENUM,
+            values: categorie_type_enum,
             allowNull: false,
         },
         archived: {
@@ -44,4 +46,7 @@ const transactionCategoriesModel = pg_client.define<TransactionCategoriesInstanc
         },
     }
 )
-export { transactionCategoriesModel }
+export {
+    transactionCategoriesModel,
+    categorie_type_enum,
+}
