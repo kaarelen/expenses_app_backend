@@ -12,6 +12,7 @@ import { wallets_router } from './routers/wallets'
 import { transaction_categories_router } from './routers/transaction_categories'
 import { transactions_router } from './routers/transactions'
 import { auth_middleware } from './middlewares/auth_middleware'
+import { pgErrorHandler } from './db_pg/helpers/error_handler'
 
 const app = express()
 // miidlewares
@@ -38,6 +39,7 @@ app.use('/', async (req, res) => {
 })
 
 // error handlers
+app.use(pgErrorHandler)
 // general error handler
 app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
     console.log('!!!UNHANDLED EXCEPTION!!!', 'Path: ', req.path, req.headers, req.body, '::', err.name, err,)
