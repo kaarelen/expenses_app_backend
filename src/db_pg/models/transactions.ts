@@ -35,6 +35,7 @@ const transactionsModel = pg_client.define<TransactionsInstance>(
         fk_users: {
             type: DataTypes.INTEGER,
             allowNull: false,
+            onDelete: 'CASCADE',
             references: {
                 model: usersModel,
                 key: 'id',

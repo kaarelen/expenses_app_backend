@@ -39,6 +39,7 @@ const transactionCategoriesModel = pg_client.define<TransactionCategoriesInstanc
         fk_users: {
             type: DataTypes.INTEGER,
             allowNull: false,
+            onDelete: 'CASCADE',
             references: {
                 model: usersModel,
                 key: 'id',

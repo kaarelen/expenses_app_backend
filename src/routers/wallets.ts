@@ -26,7 +26,6 @@ wallets_router
         body('balance').isNumeric(),
         validationErrorHandler,
         async (req, res, next) => {
-            // sick! TODO: write requset body validation (not only here)
             await walletsModel.create({
                 name: req.body.name,
                 wallet_type: req.body.wallet_type,

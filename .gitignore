@@ -5,4 +5,5 @@ package-lock.json
 .DS_Store
 __*.ts
 yarn.lock
+yarn-error.log
 package-lock.jsong

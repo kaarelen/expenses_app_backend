@@ -20,7 +20,7 @@ const CONFIG = {
     PG_PASSWORD: get_env_variable('PG_PASSWORD', ''),
     PG_PORT: get_env_variable('PG_PORT', '5432'),
     // else
-    NODE_ENV: get_env_variable('NODE_ENV', 'production', true),
+    NODE_ENV: get_env_variable('NODE_ENV', 'prod'),
     EXPRESS_HOST: get_env_variable('EXPRESS_HOST', 'localhost'),
     EXPRESS_PORT: get_env_variable('EXPRESS_PORT', '4000'),
 }

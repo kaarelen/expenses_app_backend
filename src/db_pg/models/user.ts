@@ -16,7 +16,7 @@ const usersModel = pg_client.define<UserInstance>(
             allowNull: false,
             autoIncrement: true,
             primaryKey: true,
-            unique: true
+            unique: true,
         },
         email: {
             type: DataTypes.STRING(60),

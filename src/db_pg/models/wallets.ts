@@ -52,6 +52,7 @@ const walletsModel = pg_client.define<WalletInstance>(
             // fkey users
             type: DataTypes.INTEGER,
             allowNull: false,
+            onDelete: 'CASCADE',
             references: {
                 model: usersModel,
                 key: 'id',

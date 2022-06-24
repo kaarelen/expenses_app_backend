@@ -23,7 +23,7 @@ app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 app.use(cookieParser())
 app.use((req, res, next) => {
-    console.log('REQUEST::', req.method, req.url, 'q::', req.query, 'b::', req.body)
+    if (CONFIG.NODE_ENV == 'dev') { console.log('REQUEST::', req.method, req.url, 'q::', req.query, 'b::', req.body) }
     res.set('Access-Control-Allow-Origin', 'http://localhost:3000')
     next()
 })
@@ -48,7 +48,7 @@ app.use((err: Error, req: express.Request, res: express.Response, next: express.
 })
 
 const App = {
-    start: async () => {
+    start: () => {
         app.listen(
             Number(CONFIG.EXPRESS_PORT),
             CONFIG.EXPRESS_HOST,
@@ -56,4 +56,7 @@ const App = {
         )
     },
 }
-export { App }
+export {
+    App,
+    app, // for tests
+}
